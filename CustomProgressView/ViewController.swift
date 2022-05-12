@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let progressView = BCProgressView()
+    let progressView = BCProgressView(.systemYellow)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     
     
     @IBAction func setProgressMin(_ sender: Any) {
-        progressView.setProgress(0)
+        progressView.resetProgress()
     }
     
     @IBAction func setProgress10(_ sender: Any) {
@@ -39,16 +39,17 @@ class ViewController: UIViewController {
     
     
     @IBAction func setProgressMax(_ sender: Any) {
-        progressView.setProgress(10)
+        progressView.setProgress(1)
     }
     
     @IBAction func setProgressRandom(_ sender: Any) {
-        progressView.setProgress(CGFloat.random(in: 0...1))
+        progressView.removeAllAnimations()
+//        progressView.setProgress(CGFloat.random(in: 0...1))
     }
     
     func setupUI() {
-        progressView.backgroundColor = .red
-                
+        progressView.backgroundColor = UIColor(displayP3Red: 0.3, green: 0.3, blue: 0.3, alpha: 0.3)
+        
         progressView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(progressView)
         
