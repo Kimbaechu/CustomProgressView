@@ -18,7 +18,7 @@ class BCProgressView: UIView {
     }
     
     private var progressLayer = CAShapeLayer()
-    
+    private let gradientLayer = CAGradientLayer()
     var progress: Float = 0
     
 //    convenience init(_ color: UIColor) {
@@ -44,7 +44,7 @@ class BCProgressView: UIView {
         setupLayers()
     }
 
-    func setProgress(_ value: Float, animated: Bool = true, duration: TimeInterval = 0.2) {
+    func setProgress(_ value: Float, animated: Bool = true, duration: TimeInterval = 0.25) {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.duration = duration
         animation.fromValue = progress
@@ -52,10 +52,9 @@ class BCProgressView: UIView {
         animation.fillMode = .both
         animation.isRemovedOnCompletion = false
         
-        progressLayer.add(animation, forKey: "animation")
+        progressLayer.add(animation, forKey: "strokeEnd")
         progress = value
     }
-    
     
     func setProgress(_ progress: Float, completion: (() -> Void)?) {
         CATransaction.begin()
@@ -69,6 +68,7 @@ class BCProgressView: UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         progressLayer.strokeEnd = 0
+        gradientLayer.mask = progressLayer
         progress = 0
         CATransaction.commit()
     }
@@ -86,7 +86,6 @@ class BCProgressView: UIView {
         progressPath.move(to: CGPoint(x: 0, y: centerY))
         progressPath.addLine(to: CGPoint(x: width, y: centerY))
         
-        
         progressLayer.path = progressPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineWidth = height
@@ -95,13 +94,13 @@ class BCProgressView: UIView {
         
         layer.addSublayer(progressLayer)
         
-        let gradient = CAGradientLayer()
-        gradient.frame = bounds
-        gradient.colors = colors.map { $0.cgColor }
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 0)
-        gradient.mask = progressLayer
-        layer.addSublayer(gradient)
+        
+        gradientLayer.frame = bounds
+        gradientLayer.colors = colors.map { $0.cgColor }
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+        gradientLayer.mask = progressLayer
+        layer.addSublayer(gradientLayer)
         
         setupProgress(progress)
     }

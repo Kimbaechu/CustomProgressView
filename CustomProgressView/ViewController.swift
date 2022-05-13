@@ -19,32 +19,39 @@ class ViewController: UIViewController {
     }
     
     @IBAction func setProgressMin(_ sender: Any) {
+        print(#function)
         progressView.resetProgress()
     }
     
     @IBAction func setProgress10(_ sender: Any) {
+        print(#function)
         progressView.setProgress(0.1)
     }
     
     
     @IBAction func setProgress40(_ sender: Any) {
+        print(#function)
         progressView.setProgress(0.4)
     }
     
     
     @IBAction func setProgress90(_ sender: Any) {
+        print(#function)
         progressView.setProgress(0.9)
     }
     
     
     @IBAction func setProgressMax(_ sender: Any) {
+        print(#function)
         progressView.setProgress(1) { [weak self] in
             self?.progressView.resetProgress()
         }
     }
     
     @IBAction func setProgressRandom(_ sender: Any) {
-        progressView.removeAllAnimations()
+        print(#function)
+        progressView.colorsAnimation()
+//        progressView.removeAllAnimations()
 //        progressView.setProgress(CGFloat.random(in: 0...1))
     }
     
