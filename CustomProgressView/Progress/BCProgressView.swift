@@ -13,15 +13,24 @@ class BCProgressView: UIView {
         didSet { setupLayers() }
     }
     
+    var colors: [UIColor] = colorSet {
+        didSet { setupLayers() }
+    }
+    
     private var progressLayer = CAShapeLayer()
     
-    private var progress: CGFloat = 0
+    var progress: Float = 0
     
-    convenience init(_ color: UIColor) {
-        self.init(frame: .zero)
-        self.color = color
-    }
+//    convenience init(_ color: UIColor) {
+//        self.init(frame: .zero)
+//        self.color = color
+//    }
 
+    convenience init(_ colors: [UIColor]) {
+        self.init(frame: .zero)
+        self.colors = colors
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -35,7 +44,7 @@ class BCProgressView: UIView {
         setupLayers()
     }
 
-    func setProgress(_ value: CGFloat, duration: TimeInterval = 0.1) {
+    func setProgress(_ value: Float, animated: Bool = true, duration: TimeInterval = 0.2) {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.duration = duration
         animation.fromValue = progress
@@ -45,6 +54,14 @@ class BCProgressView: UIView {
         
         progressLayer.add(animation, forKey: "animation")
         progress = value
+    }
+    
+    
+    func setProgress(_ progress: Float, completion: (() -> Void)?) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        setProgress(progress)
+        CATransaction.commit()
     }
     
     func resetProgress() {
@@ -73,19 +90,27 @@ class BCProgressView: UIView {
         progressLayer.path = progressPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineWidth = height
-        progressLayer.strokeColor = color.cgColor
+        progressLayer.strokeColor = UIColor.systemBlue.cgColor
         progressLayer.strokeEnd = 0
         
-        
         layer.addSublayer(progressLayer)
+        
+        let gradient = CAGradientLayer()
+        gradient.frame = bounds
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 0)
+        gradient.mask = progressLayer
+        layer.addSublayer(gradient)
+        
         setupProgress(progress)
     }
     
-    private func setupProgress(_ progress: CGFloat) {
+    private func setupProgress(_ progress: Float) {
         setProgress(progress)
     }
     
-    private func validated(_ value: CGFloat) -> CGFloat {
+    private func validated(_ value: Float) -> Float {
         if value < 0 {
             return 0
         } else if value > 1 {
@@ -95,4 +120,10 @@ class BCProgressView: UIView {
         }
     }
     
+}
+
+extension BCProgressView {
+    static var colorSet: [UIColor] {
+        [UIColor(r: 255, g: 88, b: 93), UIColor(r: 204, g: 39, b: 176)]
+    }
 }

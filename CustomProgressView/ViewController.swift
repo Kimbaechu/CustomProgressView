@@ -9,15 +9,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let progressView = BCProgressView(.systemYellow)
+//    let progressView = BCProgressView([.systemYellow, .systemRed])
+    let progressView = BCProgressView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
     }
-    
-    
-    
     
     @IBAction func setProgressMin(_ sender: Any) {
         progressView.resetProgress()
@@ -39,7 +38,9 @@ class ViewController: UIViewController {
     
     
     @IBAction func setProgressMax(_ sender: Any) {
-        progressView.setProgress(1)
+        progressView.setProgress(1) { [weak self] in
+            self?.progressView.resetProgress()
+        }
     }
     
     @IBAction func setProgressRandom(_ sender: Any) {
@@ -62,3 +63,8 @@ class ViewController: UIViewController {
 
 }
 
+extension UIColor {
+    convenience init(r:UInt, g:UInt, b:UInt, alpha:CGFloat = 1.0) {
+        self.init(red: CGFloat(r)/255, green: CGFloat(g)/255, blue: CGFloat(b)/255, alpha: alpha)
+    }
+}
