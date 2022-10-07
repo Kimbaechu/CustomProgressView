@@ -9,8 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-//    let progressView = BCProgressView([.systemYellow, .systemRed])
-    let progressView = BCProgressView()
+    let progressView = CustomProgressView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,9 +49,7 @@ class ViewController: UIViewController {
     
     @IBAction func setProgressRandom(_ sender: Any) {
         print(#function)
-        progressView.colorsAnimation()
-//        progressView.removeAllAnimations()
-//        progressView.setProgress(CGFloat.random(in: 0...1))
+        
     }
     
     func setupUI() {
